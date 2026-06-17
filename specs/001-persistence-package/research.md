@@ -95,7 +95,7 @@ public abstract partial class EfRepositoryBase<TEntity, TId>
     // EfRepositoryBase.Update.cs
     // EfRepositoryBase.Delete.cs
 }
-```
+```text
 
 ### Alternatives Considered (3)
 
@@ -153,7 +153,7 @@ foreach (var entry in ChangeTracker.Entries())
         // Cascade to related entities
     }
 }
-```
+```text
 
 ---
 
@@ -239,7 +239,7 @@ NFramework.Persistence.EfCore.Tests/
 ├── Dynamic queries with InMemoryContext
 ├── Concurrency with mocked DbUpdateConcurrencyException
 ├── Bulk operations with InMemoryContext
-```
+```text
 
 ---
 
@@ -292,7 +292,7 @@ public static async Task EnsureDatabaseCreated(this IHost host)
         await context.Database.MigrateAsync();
     }
 }
-```
+```text
 
 ---
 

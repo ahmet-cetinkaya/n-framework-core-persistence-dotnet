@@ -23,7 +23,7 @@ public class Product : AuditableEntity<Guid>
     public string Name { get; set; } = default!;
     public decimal Price { get; set; }
 }
-```
+```text
 
 Define your repository interfaces in the Application layer:
 
@@ -31,4 +31,4 @@ Define your repository interfaces in the Application layer:
 public interface IProductRepository : IAsyncRepository<Product, Guid>
 {
 }
-```
+```text

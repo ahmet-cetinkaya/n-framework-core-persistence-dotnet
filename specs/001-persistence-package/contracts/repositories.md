@@ -27,7 +27,7 @@ Contract for asynchronous repository operations.
 
 ```csharp
 Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -49,7 +49,7 @@ Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = def
 
 ```csharp
 Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -71,7 +71,7 @@ Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 
 ```csharp
 Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -95,7 +95,7 @@ Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
 
 ```csharp
 Task<TEntity?> GetByIdAsync(TId id, bool includeDeleted = false, CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -119,7 +119,7 @@ Task<TEntity?> GetByIdAsync(TId id, bool includeDeleted = false, CancellationTok
 Task<IReadOnlyList<TEntity>> GetAllAsync(
     bool includeDeleted = false,
     params Expression<Func<TEntity, object>>[] includes);
-```
+```text
 
 **Behavior:**
 
@@ -140,7 +140,7 @@ Task<IPaginate<TEntity>> FindAsync(
     DynamicQuery query,
     bool includeDeleted = false,
     CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -166,7 +166,7 @@ Task<IPaginate<TEntity>> FindAsync(
 
 ```csharp
 Task<int> CountAsync(Filter? filter = null, CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -185,7 +185,7 @@ Task<int> CountAsync(Filter? filter = null, CancellationToken cancellationToken 
 Task<int> BulkAddAsync(
     IEnumerable<TEntity> entities,
     CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -212,7 +212,7 @@ Task<int> BulkAddAsync(
 Task<int> BulkUpdateAsync(
     IEnumerable<TEntity> entities,
     CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -239,7 +239,7 @@ Task<int> BulkUpdateAsync(
 Task<int> BulkDeleteAsync(
     IEnumerable<TEntity> entities,
     CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 
@@ -295,7 +295,7 @@ Same as `IAsyncRepository.CountAsync`.
 Task<IReadOnlyList<TEntity>> RandomAsync(
     int count,
     CancellationToken cancellationToken = default);
-```
+```text
 
 **Behavior:**
 

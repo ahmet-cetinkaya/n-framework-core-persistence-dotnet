@@ -21,7 +21,7 @@ Entity<TId> (Level 1)
 AuditableEntity<TId> (Level 2)
     ↓
 SoftDeletableEntity<TId> (Level 3)
-```
+```text
 
 ---
 
@@ -37,7 +37,7 @@ public abstract class Entity<TId>
     public TId Id { get; set; }              // Primary key
     public byte[] RowVersion { get; set; }    // Optimistic concurrency token
 }
-```
+```text
 
 **Use when:** You don't need timestamps - read-only entities, lookup tables, reference data, cached values.
 
@@ -57,7 +57,7 @@ public abstract class AuditableEntity<TId> : Entity<TId>
     public DateTime CreatedAt { get; set; }   // Auto-set on creation
     public DateTime UpdatedAt { get; set; }   // Auto-updated on save
 }
-```
+```text
 
 **Use when:** You care about audit trails but won't soft delete - system logs, audit records, configuration data (permanent deletion).
 
@@ -77,7 +77,7 @@ public abstract class SoftDeletableEntity<TId> : AuditableEntity<TId>
     public bool IsDeleted { get; set; }         // Query optimization - boolean index
     public DateTime? DeletedAt { get; set; }    // Audit trail - when deleted
 }
-```
+```text
 
 **Why both properties:**
 
@@ -112,7 +112,7 @@ Level 2 - AuditableEntity<TId>
 Level 3 - SoftDeletableEntity<TId>
 ├── All from Level 2
 └── Soft Delete (IsDeleted, DeletedAt)
-```
+```text
 
 ---
 
@@ -128,7 +128,7 @@ Level 3 - SoftDeletableEntity<TId>
 [Modified] → RowVersion compared on save
      ↓
 [Conflict] → DbUpdateConcurrencyException if RowVersion mismatch
-```
+```text
 
 **Soft-deletable entities only:**
 
@@ -140,7 +140,7 @@ Level 3 - SoftDeletableEntity<TId>
 [Excluded from Queries] → Global filter uses IsDeleted
      ↓ (IncludeDeleted())
 [Visible Again] → Entity included in query results
-```
+```text
 
 ---
 
@@ -208,7 +208,7 @@ public interface IPaginate<out T>
     bool HasPrevious { get; }               // Previous page exists
     bool HasNext { get; }                   // Next page exists
 }
-```
+```text
 
 ### `Paginate<T>`
 
@@ -238,7 +238,7 @@ public class DynamicQuery
     public int PageIndex { get; set; }              // Page number (0-based)
     public int PageSize { get; set; }               // Items per page
 }
-```
+```text
 
 **Default Values:**
 
@@ -261,7 +261,7 @@ public class Filter
     public object? Value { get; set; }       // Value to compare against
     public bool IsNot { get; set; }          // Negate the condition
 }
-```
+```text
 
 **Valid Operators:**
 
@@ -282,7 +282,7 @@ public class Sort
     public string Field { get; set; }        // Property name to sort by
     public string Direction { get; set; }    // "asc" or "desc"
 }
-```
+```text
 
 ---
 
@@ -329,7 +329,7 @@ public class UserRepository : EfRepositoryBase<User, int>, IUserRepository
             .ToListAsync();
     }
 }
-```
+```text
 
 **Why use Table instead of GetAll():**
 
@@ -378,7 +378,7 @@ public static async Task EnsureDatabaseCreated<TContext>(
     this IServiceProvider services,
     CancellationToken cancellationToken = default)
     where TContext : DbContext
-```
+```text
 
 **How it behaves:**
 
@@ -399,7 +399,7 @@ A Roslyn source generator that finds your repository interfaces and generates de
 ```csharp
 // Finds interfaces like this:
 public interface IUserRepository : IAsyncRepository<User, int> { }
-```
+```text
 
 **What it generates:**
 
@@ -414,7 +414,7 @@ public static class DependencyInjection
         return services;
     }
 }
-```
+```text
 
 **Diagnostic messages:**
 
@@ -482,7 +482,7 @@ Execute against database
         ↓
 Return IPaginate<T>
 With metadata about pages
-```
+```text
 
 ---
 

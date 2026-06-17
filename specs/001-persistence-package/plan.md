@@ -72,7 +72,7 @@ specs/001-persistence-package/
 ├── contracts/           # API contracts
 │   └── repositories.md  # Repository interface contracts
 └── tasks.md             # Task breakdown (created by /speckit.tasks)
-```
+```text
 
 ### Source Code (repository root)
 
@@ -134,7 +134,7 @@ src/
             ├── Repositories/
             ├── Configuration/
             └── Dynamic/
-```
+```text
 
 **Structure Decision**: We use feature-based organization with `Features/` folders keeping related functionality together. Each feature has its own folder (Repositories, Configuration, etc.) making it easy to find and navigate code. The `Shared/` folder holds things that don't belong to a specific feature like base contexts and interceptors. This mirrors the clean architecture approach used in the starter project and keeps large codebases organized.
 

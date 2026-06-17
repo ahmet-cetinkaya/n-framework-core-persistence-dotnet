@@ -18,7 +18,7 @@ Add the NuGet packages to your project:
 ```bash
 dotnet add package NFramework.Persistence.Abstractions
 dotnet add package NFramework.Persistence.EfCore
-```
+```text
 
 You'll also need an EF Core database provider:
 
@@ -31,7 +31,7 @@ dotnet add package Microsoft.EntityFrameworkCore.PostgreSQL
 
 # SQLite (great for development and testing)
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
-```
+```text
 
 ## Step 2: Define Your Entities
 
@@ -57,7 +57,7 @@ namespace MyApp.Domain
         public string Level { get; set; } = string.Empty;
     }
 }
-```
+```text
 
 **Entity vs SoftDeletableEntity:**
 
@@ -107,7 +107,7 @@ namespace MyApp.Data
         }
     }
 }
-```
+```text
 
 ## Step 3.5: Configure Each Entity
 
@@ -160,7 +160,7 @@ namespace MyApp.Data.Configurations
         }
     }
 }
-```
+```text
 
 The `ApplyConfigurationsFromAssembly` call automatically finds all classes that implement `IEntityTypeConfiguration<T>` and have a parameterless constructor.
 
@@ -185,7 +185,7 @@ namespace MyApp.Repositories
         Task<IReadOnlyList<Product>> GetActiveProductsAsync();
     }
 }
-```
+```text
 
 ## Step 5: Implement Repositories
 
@@ -236,7 +236,7 @@ namespace MyApp.Repositories
         }
     }
 }
-```
+```text
 
 **The `Table` property** gives you direct access to the `DbSet<TEntity>` so you can use all of EF Core's query capabilities. This is more efficient and flexible than using `GetAll()` for custom queries.
 
@@ -260,7 +260,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
-```
+```text
 
 That's it! Your repositories are registered and ready to use.
 
@@ -315,7 +315,7 @@ public class UserService
         // The user won't appear in normal queries anymore
     }
 }
-```
+```text
 
 ## Dynamic Querying
 
@@ -353,7 +353,7 @@ public async Task<IPaginate<User>> SearchUsersAsync(string searchTerm, int page)
 
     return await _userRepository.FindAsync(query);
 }
-```
+```text
 
 **Operators you can use:**
 
@@ -384,7 +384,7 @@ var updatedCount = await _userRepository.BulkUpdateAsync(usersToUpdate);
 
 // Bulk delete - soft delete many users
 var deletedCount = await _userRepository.BulkDeleteAsync(usersToDelete);
-```
+```text
 
 ## Automatic Migrations
 
@@ -399,7 +399,7 @@ var app = builder.Build();
 await app.Services.EnsureDatabaseCreated<AppDbContext>();
 
 app.Run();
-```
+```text
 
 This takes care of:
 
@@ -417,7 +417,7 @@ This takes care of:
     "Default": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MyAppDb;Integrated Security=True"
   }
 }
-```
+```text
 
 ### Customize Conventions
 
@@ -436,7 +436,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
     // modelBuilder.ApplyOptimisticConcurrencyConfiguration();
     // modelBuilder.ApplySoftDeleteConfiguration();
 }
-```
+```text
 
 ## Testing
 
@@ -479,7 +479,7 @@ public class UserRepositoryTests
         // ...
     }
 }
-```
+```text
 
 ### Relational Testing with SQLite
 
@@ -493,7 +493,7 @@ public async Task Update_With_Conflicting_RowVersion_Throws()
     using var context = TestDbContextFactory.CreateSqlite();
     // ...
 }
-```
+```text
 
 ## Troubleshooting
 
@@ -518,7 +518,7 @@ catch (DbUpdateConcurrencyException ex)
 
     // Present the conflict to the user so they can decide what to do
 }
-```
+```text
 
 ## Next Steps
 

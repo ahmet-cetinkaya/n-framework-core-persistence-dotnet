@@ -30,7 +30,7 @@ public static IServiceCollection AddPersistence(this IServiceCollection services
     services.AddScoped<IProductRepository, ProductRepository>();
     return services;
 }
-```
+```text
 
 1. Leverage the `EFCoreRepository` base:
 
@@ -39,4 +39,4 @@ public class ProductRepository : EFCoreRepository<Product, Guid, AppDbContext>, 
 {
     public ProductRepository(AppDbContext context) : base(context) { }
 }
-```
+```text

@@ -429,7 +429,7 @@ Task: "Create unit test for dynamic query types in tests/.../DynamicQueryTests.c
 Task: "Create EfRepositoryBase abstract partial class in src/.../EfRepositoryBase.cs"
 Task: "Create EfRepositoryBase.Create.cs partial in src/.../EfRepositoryBase.Create.cs"
 Task: "Create EfRepositoryBase.Read.cs partial in src/.../EfRepositoryBase.Read.cs"
-```
+```text
 
 ---
 
