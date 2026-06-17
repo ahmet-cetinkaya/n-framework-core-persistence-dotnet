@@ -1,3 +1,4 @@
+using NFramework.Persistence.Abstractions.Repositories;
 using NFramework.Persistence.EFCore.Repositories;
 using NFramework.Persistence.EFCore.Tests.Helpers;
 using Shouldly;
@@ -287,7 +288,9 @@ public class CrudTests
         (await repo.AddAsync(new TestProduct(Guid.NewGuid()) { Name = "Banana", Price = 2.00m })).Unwrap();
         (await repo.SaveChangesAsync()).Unwrap();
 
-        var result = (await repo.GetAsync(static p => p.Name == "Banana")).Unwrap();
+        var result = (
+            await repo.GetAsync(new QueryOption<TestProduct>(Predicate: static p => p.Name == "Banana"))
+        ).Unwrap();
         result.ShouldNotBeNull();
         result.Name.ShouldBe("Banana");
     }
@@ -339,7 +342,7 @@ public class CrudTests
     }
 
     [Fact]
-    public async Task GetAllAsync_WhenExceedingLimit_ShouldThrowInvalidOperationException()
+    public async Task GetAllAsync_WhenExceedingLimit_ShouldReturnError()
     {
         using TestDbContext context = TestDbContext.Create();
         LimitedTestProductRepository repo = new(context);
@@ -349,7 +352,10 @@ public class CrudTests
         (await repo.AddAsync(new TestProduct(Guid.NewGuid()) { Name = "3", Price = 3 })).Unwrap();
         (await repo.SaveChangesAsync()).Unwrap();
 
-        await Should.ThrowAsync<InvalidOperationException>(async () => (await repo.GetAllAsync()).Unwrap());
+        Rail<IReadOnlyList<TestProduct>> result = await repo.GetAllAsync();
+
+        result.IsSuccess(out _, out UnionError? error).ShouldBeFalse();
+        (error is UnionError.Custom).ShouldBeTrue();
     }
 
     [Fact]

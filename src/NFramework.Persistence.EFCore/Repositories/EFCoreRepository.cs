@@ -2,11 +2,17 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using NFramework.Persistence.Abstractions.Entities;
 using NFramework.Persistence.Abstractions.Repositories;
+using UnionRailway;
 
 namespace NFramework.Persistence.EFCore.Repositories;
 
 /// <summary>
 /// Base EF Core repository implementing all NFramework persistence contracts.
+/// <para>
+/// Error handling convention:
+/// Throws <see cref="ArgumentNullException"/> for programming errors (null required arguments).
+/// Returns <see cref="Rail{T}"/> errors for domain/runtime errors (not found, result set exceeded).
+/// </para>
 /// </summary>
 /// <typeparam name="TEntity">Entity type inheriting from <see cref="Entity{TId}"/>.</typeparam>
 /// <typeparam name="TId">Primary key type implementing <see cref="IEquatable{TId}"/>.</typeparam>
@@ -69,23 +75,23 @@ public abstract partial class EFCoreRepository<
 
     /// <summary>
     /// Enforces the <see cref="MaxResultSetSize"/> limit on a query.
+    /// Fetches <c>limit + 1</c> rows to detect overflow without a separate COUNT round-trip.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown when the query results exceed the limit.</exception>
-    protected async Task<IReadOnlyList<TEntity>> ExecuteWithLimitAsync(
-        IQueryable<TEntity> query,
+    protected async Task<Rail<IReadOnlyList<T>>> ExecuteWithLimitAsync<T>(
+        IQueryable<T> query,
         CancellationToken cancellationToken
     )
     {
         if (MaxResultSetSize is not { } limit || limit <= 0)
             return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        // We take limit + 1 to check if there are more records than allowed
         var results = await query.Take(limit + 1).ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return results.Count <= limit
             ? results
-            : throw new InvalidOperationException(
-                $"The result set size exceeded the configured limit of {limit} records. "
+            : new UnionError.Custom(
+                Code: "RESULT_SET_EXCEEDED",
+                Message: $"The result set size exceeded the configured limit of {limit} records. "
                     + "Please use pagination or more restrictive filters."
             );
     }

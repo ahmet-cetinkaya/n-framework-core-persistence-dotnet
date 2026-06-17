@@ -13,20 +13,19 @@ public abstract partial class EFCoreRepository<TEntity, TId, TContext>
     /// <inheritdoc />
     public virtual async Task<Rail<TEntity>> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         TEntity? entity = await DbSet.FindAsync([id], cancellationToken).ConfigureAwait(false);
         return entity is not null ? entity : new UnionError.NotFound(typeof(TEntity).Name);
     }
 
     /// <inheritdoc />
     public virtual async Task<Rail<TEntity>> GetAsync(
-        Expression<Func<TEntity, bool>>? predicate = null,
+        QueryOption<TEntity>? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        IQueryable<TEntity> query = DbSet;
-        if (predicate != null)
-            query = query.Where(predicate);
-
+        IQueryable<TEntity> query = buildQuery(options);
         TEntity? entity = await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         return entity is not null ? entity : new UnionError.NotFound(typeof(TEntity).Name);
     }
@@ -37,7 +36,7 @@ public abstract partial class EFCoreRepository<TEntity, TId, TContext>
         CancellationToken cancellationToken = default
     )
     {
-        IQueryable<TEntity> query = BuildQuery(options);
+        IQueryable<TEntity> query = buildQuery(options);
         return await ExecuteWithLimitAsync(query, cancellationToken).ConfigureAwait(false);
     }
 
@@ -47,7 +46,7 @@ public abstract partial class EFCoreRepository<TEntity, TId, TContext>
         CancellationToken cancellationToken = default
     )
     {
-        IQueryable<TEntity> query = BuildQuery(options);
+        IQueryable<TEntity> query = buildQuery(options);
         Paging paging = options?.Page ?? Paging.Default;
         return await query.ToPaginatedListAsync(paging, cancellationToken).ConfigureAwait(false);
     }
@@ -70,7 +69,7 @@ public abstract partial class EFCoreRepository<TEntity, TId, TContext>
             ? await DbSet.CountAsync(predicate, cancellationToken).ConfigureAwait(false)
             : await DbSet.CountAsync(cancellationToken).ConfigureAwait(false);
 
-    private IQueryable<TEntity> BuildQuery(QueryOption<TEntity>? options)
+    private IQueryable<TEntity> buildQuery(QueryOption<TEntity>? options)
     {
         IQueryable<TEntity> query = DbSet;
 
@@ -78,6 +77,7 @@ public abstract partial class EFCoreRepository<TEntity, TId, TContext>
             query = query.IgnoreQueryFilters(QueryFilters.SoftDeletionArray);
 
         query = query.ApplyTracking(options);
+        query = query.ApplySplitting(options);
 
         if (options?.Predicate != null)
             query = query.Where(options.Predicate);
